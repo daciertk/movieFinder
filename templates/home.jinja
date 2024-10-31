@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Movie Finder</title>
+     <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+</head>
+<body>
+    <h1>Welcome to Movie Finder</h1>
+
+    <div class="body">
+    <form action="/">
+        <label for ="type">Select type</label>
+        <select name="type">
+            <option value="tvSeries"> TV Series</option>
+            <option value="movie"> Movie</option>
+            <option value="tvMiniSeries"> Mini Series</option>
+        </select>
+        <p>Select Genres</p>
+            <input type="checkbox" name="Comedy" value="Comedy"><label>Comedy</label>
+            <input type="checkbox" name="Adventure" value="Adventure"><label>Adventure</label>
+            <input type="checkbox" name="Drama" value="Drama"><label>Drama</label><br>
+            <input type="checkbox" name="Thriller  " value="Thriller"><label>Thriller</label>
+            <input type="checkbox" name="Animation" value="Animation"><label>Animation</label>
+            <input type="checkbox" name="Talk-Show" value="Talk-Show"><label>Talk-Show</label><br>
+            <input type="checkbox" name="Mystery" value="Mystery"><label>Mystey</label>
+            <input type="checkbox" name="Documentary" value="Documentary"><label>Documentary</label>
+            <input type="checkbox" name="Fantasy" value="Fantasy"><label>Fantasy</label><br>
+            <input type="checkbox" name="Family" value="Family"><label>Family</label>
+            <input type="checkbox" name="Game-Show" value="Game-Show"><label>Game Show</label>
+            <input type="checkbox" name="Reality-TV" value="Reality-TV"><label>Reality TV</label><br>
+            <input type="checkbox" name="War" value="War"><label>War</label>
+            <input type="checkbox" name="Sci-Fi" value="Sci-Fi"><label>Sci-Fi</label>
+            <input type="checkbox" name="Music" value="Music"><label>Music</label><br>
+            <input type="checkbox" name="Horror" value="Horror"><label>Horror</label>
+            <input type="checkbox" name="Action" value="Action"><label>Action</label>
+            <input type="checkbox" name="Biography" value="Biography"><label>Biography</label><br>
+            <input type="checkbox" name="Sports" value="Sports"><label>Sports</label><br>
+        <p>Select Minimum Rating</p>
+        
+        <input name="minRating" type="range" min="70" max="100" value="80" class="slider" id="ratingSelection">
+       
+        <p>Minimum Rating: <span id="output"></span></p>
+
+    </div>
+    <input type="submit">
+    </form>
+    {%if data%}
+    <div id="table_div"></div>
+    <script type="text/javascript">
+        
+        google.charts.load('current', { 'packages': ['table'] });
+        google.charts.setOnLoadCallback(drawTable);
+
+        function drawTable(){
+            var data = new google.visualization.DataTable();
+            data.addColumn('string', 'Title');
+            data.addColumn('string', 'Type');
+            data.addColumn('string', 'Genres');
+            data.addColumn('string', 'Average Rating');
+            data.addColumn('string', 'Number of Votes');
+            data.addColumn('string', 'Release Year');
+
+
+ 
+        data.addRows([
+        {% for row in data %}
+        [
+            {% for value in row %}
+            '{{ value|escape }}'{% if not loop.last %}, {% endif %}
+            {% endfor %}
+        ]{% if not loop.last %}, {% endif %}
+        {% endfor %}
+        ]);
+
+
+    var table = new google.visualization.Table(document.getElementById('table_div'));
+    table.draw(data, { showRowNumber: true, page: true, pageSize: 100 });
+            
+           
+        }
+    </script>
+    {%endif%}
+
+        <script>
+            var slider = document.getElementById("ratingSelection");
+            var output = document.getElementById("output");
+            output.innerHTML = slider.value;
+
+            slider.oninput = function() {
+                output.innerHTML = (this.value * 0.1).toFixed(1);
+            }
+        </script>
+</body>
+
+</html>
